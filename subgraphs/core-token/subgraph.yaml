@@ -1,0 +1,26 @@
+specVersion: 0.0.2
+description: core API
+repository: https://github.com/pelican-glyph/core-test-subgraph.git
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: USDT
+    network: ${NETWORK}
+    source:
+      address: "${USDT_ADDRESS}"
+      abi: ERC20
+      startBlock: ${USDT_BLOCK}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - Transfer
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
